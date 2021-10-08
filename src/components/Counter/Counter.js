@@ -9,12 +9,16 @@ export class Counter extends Component {
     initialGood: 0,
     initialNeutral: 0,
     initialBad: 0,
+    initialTotal: 0,
+    initialPercentage:0
   };
   state = {
     title: 'Statistics',
     good: this.props.initialGood,
     neutral: this.props.initialNeutral,
     bad: this.props.initialBad,
+    total:this.props.initialTotal,
+    percentage:this.props.initialPercentage
   }
 
   feedbackGood = () => {
@@ -32,32 +36,49 @@ export class Counter extends Component {
       bad: prevState.bad+1,
     }));
   }
+  countTotalFeedback = () => {
+    this.setState(prevState => ({
+      total: prevState.good + prevState.neutral + prevState.bad,
+    }));
+  }
+
+  countPositiveFeedbackPercentage = () => {
+    this.setState(prevState => ({
+      percentage: Math.ceil((prevState.good + prevState.neutral)/(prevState.total)* 100)
+    }));
+  }
+   wrapperFeedback = () => {
+    this.countTotalFeedback()
+    this.countPositiveFeedbackPercentage()
+   }
 
   render () {
-    const {title, good, neutral, bad} = this.state;
-    const { feedbackGood, feedbackNeutral, feedbackBad } = this;
+    const {title, good, neutral, bad, total, percentage} = this.state;
+    const { feedbackGood, feedbackNeutral, feedbackBad, wrapperFeedback} = this;
 
     return (
       <div className={s.counter}>
         <Button id="goodBtn" variant="outline-secondary"
         className={s.btn}
-        onClick={feedbackGood}>
+        onClick={()=>{feedbackGood(); wrapperFeedback()}}>
         Good
         </Button>
         <Button id="neutralBtn" variant="outline-secondary"
         className={s.btn}
-        onClick={feedbackNeutral}>
+        onClick={()=>{feedbackNeutral(); wrapperFeedback()}}>
         Neutral
         </Button>
         <Button id="badBtn" variant="outline-secondary"
         className={s.btn}
-        onClick={feedbackBad}>
+        onClick={()=>{feedbackBad(); wrapperFeedback()}}>
         Bad
         </Button>
         <Title value={title}/>
-        <p className={s.text}>Good:{good}</p>
-        <p className={s.text}>Neutral:{neutral}</p>
-        <p className={s.text}>Bad:{bad}</p>
+        <p className={s.text}>Good: {good}</p>
+        <p className={s.text}>Neutral: {neutral}</p>
+        <p className={s.text}>Bad: {bad}</p>
+        <p className={s.text}>Total: {total}</p>
+        <p className={s.text}>Positive feedback: {percentage}%</p>
       </div>
     );
   }
