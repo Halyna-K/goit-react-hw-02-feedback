@@ -1,19 +1,15 @@
-import PropTypes from 'prop-types'
-import s from './Title.module.css'
+import PropTypes from "prop-types";
+import s from "./Title.module.css";
 
-export const Title = ({ value }) => {
+export const Title = ({ title, children }) => {
   return (
-      <h2 className={s.title}>
-        {value}
-      </h2>
-  )
-}
-
-
-Title.defaultProps = {
-  value: 'title',
-}
+    <>
+      <h2 className={s.text}> {title} </h2>
+      {children}
+    </>
+  );
+};
 
 Title.propTypes = {
-  value: PropTypes.string,
-}
+  title: PropTypes.string,
+};
